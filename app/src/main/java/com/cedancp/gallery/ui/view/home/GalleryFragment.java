@@ -6,8 +6,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,7 @@ import com.cedancp.gallery.R;
 import com.cedancp.gallery.ui.model.ImageResponse;
 import com.cedancp.gallery.ui.viewmodel.ImagesViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -42,7 +43,12 @@ public class GalleryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "onCreate: here!!!");
+        images = new ArrayList<>();
+        imagesViewModel = ViewModelProviders.of(this).get(ImagesViewModel.class);
+
+        //TODO: Set up recycler view and adapter
+
+        getImages();
     }
 
     @Override
@@ -52,13 +58,26 @@ public class GalleryFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_gallery, container, false);
     }
 
+    /**
+     * Sets images observer received from the API
+     */
     private void getImages() {
         imagesViewModel.getImages().observe(getActivity(), new Observer<List<ImageResponse>>() {
             @Override
             public void onChanged(List<ImageResponse> imageResponses) {
                 images = imageResponses;
+
+                // Updates recycler view adapter
+                updateGallery();
             }
         });
+    }
+
+    /**
+     * Updates recycler view
+     */
+    private void updateGallery() {
+    //TODO: Call notifyDataSetChanged on adapter
     }
 
     @Override
