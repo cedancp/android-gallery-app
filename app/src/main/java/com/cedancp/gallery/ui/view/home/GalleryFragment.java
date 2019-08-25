@@ -1,13 +1,11 @@
 package com.cedancp.gallery.ui.view.home;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -73,18 +71,12 @@ public class GalleryFragment extends Fragment {
         rv_images.setAdapter(galleryAdapter);
 
         images = new ArrayList<>();
-        imagesViewModel = ViewModelProviders.of(this).get(ImagesViewModel.class);
+
+        imagesViewModel = mListener.onGetViewModel();
 
         getImages();
-        // Inflate the layout for this fragment
-        return fragmentGalleryBinding.getRoot();
-    }
 
-    /**
-     * Sets images observer received from the API
-     */
-    private void getImages() {
-        imagesViewModel.getImages().observe(getActivity(), new Observer<List<ImageResponse>>() {
+        imagesViewModel.getCurrentImages().observe(getActivity(), new Observer<List<ImageResponse>>() {
             @Override
             public void onChanged(List<ImageResponse> imageResponses) {
                 images = imageResponses;
@@ -93,6 +85,15 @@ public class GalleryFragment extends Fragment {
                 updateGallery();
             }
         });
+        // Inflate the layout for this fragment
+        return fragmentGalleryBinding.getRoot();
+    }
+
+    /**
+     * Sets images observer received from the API
+     */
+    private void getImages() {
+        imagesViewModel.getImages();
     }
 
     /**
@@ -124,7 +125,6 @@ public class GalleryFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        ImagesViewModel onGetViewModel();
     }
 }
