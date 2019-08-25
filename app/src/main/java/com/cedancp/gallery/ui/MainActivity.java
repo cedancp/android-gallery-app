@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.O
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab_gallery);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
