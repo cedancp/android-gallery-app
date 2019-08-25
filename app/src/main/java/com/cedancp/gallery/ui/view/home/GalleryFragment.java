@@ -4,15 +4,20 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cedancp.gallery.Config;
 import com.cedancp.gallery.R;
+import com.cedancp.gallery.databinding.FragmentGalleryBinding;
 import com.cedancp.gallery.ui.model.ImageResponse;
 import com.cedancp.gallery.ui.viewmodel.ImagesViewModel;
 
@@ -32,6 +37,10 @@ public class GalleryFragment extends Fragment {
 
     private ImagesViewModel imagesViewModel;
     private List<ImageResponse> images;
+    private FragmentGalleryBinding fragmentGalleryBinding;
+    private GalleryAdapter galleryAdapter;
+
+    private RecyclerView rv_images;
 
     private OnFragmentInteractionListener mListener;
 
@@ -42,20 +51,33 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        images = new ArrayList<>();
-        imagesViewModel = ViewModelProviders.of(this).get(ImagesViewModel.class);
-
-        //TODO: Set up recycler view and adapter
-
-        getImages();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        images = new ArrayList<>();
+
+        // Setting up data binding
+        fragmentGalleryBinding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_gallery, container, false);
+
+        rv_images = fragmentGalleryBinding.rvImages;
+        galleryAdapter = new GalleryAdapter(images);
+
+        rv_images.setLayoutManager(new GridLayoutManager(getActivity(), Config.GALLERY_GRID_COLUMNS));
+
+        // TODO: Set animator
+
+        rv_images.setAdapter(galleryAdapter);
+
+        images = new ArrayList<>();
+        imagesViewModel = ViewModelProviders.of(this).get(ImagesViewModel.class);
+
+        getImages();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gallery, container, false);
+        return fragmentGalleryBinding.getRoot();
     }
 
     /**
@@ -77,7 +99,11 @@ public class GalleryFragment extends Fragment {
      * Updates recycler view
      */
     private void updateGallery() {
-    //TODO: Call notifyDataSetChanged on adapter
+        if(galleryAdapter != null) {
+            galleryAdapter.updateImages(images);
+            galleryAdapter.notifyDataSetChanged();
+        }
+
     }
 
     @Override

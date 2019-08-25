@@ -1,50 +1,67 @@
 package com.cedancp.gallery.ui.model;
 
+import android.widget.ImageView;
+
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.databinding.BindingAdapter;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ImageResponse {
+public class ImageResponse extends BaseObservable {
 
     @SerializedName("id")
     @Expose
     private Integer id;
     @SerializedName("name")
     @Expose
-    private Integer name;
+    private String name;
     @SerializedName("description")
     @Expose
-    private Integer description;
+    private String description;
     @SerializedName("imageUrl")
     @Expose
-    private Integer imageUrl;
+    private String imageUrl;
 
-    public ImageResponse(Integer name, Integer description, Integer imageUrl) {
+    public ImageResponse(String name, String description, String imageUrl) {
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
     }
 
-    public Integer getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(Integer name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public Integer getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(Integer description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public Integer getImageUrl() {
+    @Bindable
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(Integer imageUrl) {
+    @Bindable
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    @BindingAdapter({"imageUrl"})
+    public static void loadImage(ImageView view, String imageUrl) {
+        Glide.with(view.getContext())
+                .load(imageUrl).apply(new RequestOptions().centerCrop())
+                .into(view);
     }
 }
