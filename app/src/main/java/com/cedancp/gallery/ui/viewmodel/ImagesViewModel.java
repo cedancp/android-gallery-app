@@ -11,6 +11,8 @@ import com.cedancp.gallery.ui.model.ImageResponse;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+
 public class ImagesViewModel extends AndroidViewModel {
 
     private ImageRepository imageRepository;
@@ -20,7 +22,15 @@ public class ImagesViewModel extends AndroidViewModel {
         imageRepository =  new ImageRepository();
     }
 
-    public LiveData<List<ImageResponse>> getImages() {
-        return imageRepository.getImages();
+    public void getImages() {
+        imageRepository.getImages();
+    }
+
+    public void uploadImage(MultipartBody.Part body, String name, String description) {
+        imageRepository.uploadImage(body, name, description);
+    }
+
+    public LiveData<List<ImageResponse>> getCurrentImages() {
+        return imageRepository.getCurrentImages();
     }
 }
