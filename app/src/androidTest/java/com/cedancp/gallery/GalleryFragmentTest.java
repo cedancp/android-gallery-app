@@ -34,13 +34,21 @@ import static org.mockito.Mockito.verify;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class GalleryFragmentTest {
+public class ExampleInstrumentedTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mainActivityRule = new ActivityTestRule<>(
             MainActivity.class,
             true,
             true);
+
+    @Test
+    public void useAppContext() {
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+
+        assertEquals("com.cedancp.gallery", appContext.getPackageName());
+    }
 
     @Test
     public void recyclerViewIsMounted() {
