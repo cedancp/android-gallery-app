@@ -44,7 +44,7 @@ public class MainActivityTest {
                 .getResourcePackageName(R.mipmap.ic_launcher) + '/' + resources.getResourceTypeName(
                                         R.mipmap.ic_launcher) + '/' + resources.getResourceEntryName(
                                         R.mipmap.ic_launcher));
-        
+
         Intent resultData = new Intent();
         resultData.setData(imageUri);
         activityResult = new Instrumentation.ActivityResult(
