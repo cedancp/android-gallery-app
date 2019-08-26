@@ -1,11 +1,8 @@
-# gallery-rest-api
-REST API for image upload.
+# android-gallery-app
+App for image listing, rotate image and upload image to server.
 
 ## Getting Started
-1. Clone project, go into project's directory and run npm install
-2. Create .env file on root directory, set up DB credentiasl, server port and image domain for images url path. If it is local use your pc local ip
-3. run npm start
-
-## Test
-1. Configure db credentials on app.test.js
-2. run npm test
+1. This project uses Android Navigation, LiveData, Databinding and retrofit.
+2. it connects to a server made from this repository https://github.com/cedancp/gallery-rest-api, it wont work if this server is not running
+3. Follow instructions on the api repository to get the server up.
+3. Change API_URL on Config class on projects java files.
