@@ -2,12 +2,14 @@ package com.cedancp.gallery;
 
 import android.app.Activity;
 import android.app.Instrumentation;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 
-import androidx.test.core.app.ApplicationProvider;
+import androidx.core.content.FileProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 
@@ -17,6 +19,9 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -29,26 +34,26 @@ import static org.hamcrest.Matchers.allOf;
 
 public class MainActivityTest {
 
-    private Instrumentation.ActivityResult activityResult;
+    private Instrumentation.ActivityResult activityResultGallery;
+    private Instrumentation.ActivityResult activityResultPhoto;
 
     @Rule
     public final ActivityTestRule<MainActivity> rule =
             new ActivityTestRule<>(MainActivity.class);
 
-
     @Before
-    public void setupImageUri() {
+    public void setupActivityResutlGallery() {
 
-        Resources resources = ApplicationProvider.getApplicationContext().getResources();
-        Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources
-                .getResourcePackageName(R.mipmap.ic_launcher) + '/' + resources.getResourceTypeName(
-                                        R.mipmap.ic_launcher) + '/' + resources.getResourceEntryName(
-                                        R.mipmap.ic_launcher));
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-        Intent resultData = new Intent();
-        resultData.setData(imageUri);
-        activityResult = new Instrumentation.ActivityResult(
-                Activity.RESULT_OK, resultData);
+        // Accepted mimetypes jpg and png
+        String[] mimetypes = {"image/jpeg\", \"image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
+        File dir = rule.getActivity().getExternalCacheDir();
+        File file = new File(dir.getPath(), "pickImageResult.jpeg");
+        Uri uri = Uri.fromFile(file);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        activityResultGallery = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 
     }
 
@@ -61,7 +66,7 @@ public class MainActivityTest {
         Intents.init();
         Matcher<Intent> expectedIntent = allOf(hasAction(Intent.ACTION_PICK),
                 hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-        intending(expectedIntent).respondWith(activityResult);
+        intending(expectedIntent).respondWith(activityResultGallery);
 
         //Click on floating action button
         onView(withId(R.id.fab_gallery)).perform(click());

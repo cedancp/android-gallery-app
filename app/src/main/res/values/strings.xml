@@ -4,8 +4,9 @@
     <!-- Permissions -->
     <string name="permissions_ok">Ok</string>
     <string name="permissions_storage">Access to gallery is required to send pictures.</string>
+    <string name="permissions_camera">Access to camera is required to take pictures.</string>
+    <string name="permissions_write_to_storage">Write to is required to take pictures.</string>
     <string name="permissions_granted">Permission accepted.</string>
     <string name="permissions_not_granted">Permission not accepted.</string>
-
 
 </resources>
