@@ -70,6 +70,6 @@ dependencies {
 
 
     debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
-
-
 }
+
+apply plugin: "androidx.navigation.safeargs"

@@ -9,4 +9,7 @@
     <string name="permissions_granted">Permission accepted.</string>
     <string name="permissions_not_granted">Permission not accepted.</string>
 
+    <!--Image Detail-->
+    <string name="image_upload">Your image has been uploaded!!!</string>
+
 </resources>

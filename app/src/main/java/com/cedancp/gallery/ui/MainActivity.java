@@ -5,13 +5,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import com.cedancp.gallery.BuildConfig;
 import com.cedancp.gallery.Config;
+import com.cedancp.gallery.ui.view.home.GalleryFragmentDirections;
+import com.cedancp.gallery.ui.view.imagedetail.ImageDetailFragment;
 import com.cedancp.gallery.R;
 import com.cedancp.gallery.ui.view.home.GalleryFragment;
 import com.cedancp.gallery.ui.viewmodel.ImagesViewModel;
@@ -42,7 +43,10 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class MainActivity extends AppCompatActivity implements GalleryFragment.OnFragmentInteractionListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements
+        GalleryFragment.OnFragmentInteractionListener,
+        ImageDetailFragment.OnFragmentInteractionListener,
+        View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -139,21 +143,20 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.O
             c.moveToFirst();
             int columnIndex = c.getColumnIndex(filePath[0]);
             String picturePath = c.getString(columnIndex);
-            File imageFile = new File(picturePath);
-            c.close();
-            RequestBody requestFile = RequestBody.create(imageFile, MediaType.parse("multipart/form-data"));
-            MultipartBody.Part body = MultipartBody.Part.createFormData("imageFile", imageFile.getName(), requestFile);
-
-            imagesViewModel.uploadImage(body, "testApp", "testApp");
+            goToImageDetail(picturePath);
         } else if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-            File imageFile = new File(currentImagePath);
-            if(imageFile.exists()) {
-                RequestBody requestFile = RequestBody.create(imageFile, MediaType.parse("multipart/form-data"));
-                MultipartBody.Part body = MultipartBody.Part.createFormData("imageFile", imageFile.getName(), requestFile);
-
-                imagesViewModel.uploadImage(body, "testApp", "testApp");
-            }
+            goToImageDetail(currentImagePath);
         }
+    }
+
+    private void goToImageDetail(String imagePath) {
+        GalleryFragmentDirections.ImageDetailAction action = GalleryFragmentDirections.imageDetailAction();
+
+        action.setImagePath(imagePath);
+        if(navController.getCurrentDestination().getId() == R.id.imageDetailFragment) {
+            navController.popBackStack();
+        }
+        navController.navigate(action);
     }
 
     @Override
